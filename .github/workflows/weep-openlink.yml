@@ -23,5 +23,5 @@ jobs:
         run: |
           export PATH="${GITHUB_WORKSPACE}/fakebin:$PATH"
           echo "[*] PATH is: $PATH"
-          go run cmd/main.go
+          go run main.go
           ls -l /tmp/pwned || echo "[-] /tmp/pwned not found"
