@@ -19,6 +19,9 @@ jobs:
       - name: Make fake open executable
         run: chmod +x fakebin/open
 
+      - name: Download Go modules
+        run: go mod download
+
       - name: Prepend fakebin to PATH and run PoC
         run: |
           export PATH="${GITHUB_WORKSPACE}/fakebin:$PATH"
