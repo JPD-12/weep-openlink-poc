@@ -19,6 +19,17 @@ jobs:
       - name: Make fake open executable
         run: chmod +x fakebin/open
 
+      - name: Test fake open script directly
+        run: |
+          ./fakebin/open
+          ls -l /tmp/pwned || echo "/tmp/pwned not found"
+
+      - name: Debug PATH
+        run: echo $PATH
+
+      - name: Verify which open is used
+        run: which open
+
       - name: Download Go modules
         run: go mod download
 
