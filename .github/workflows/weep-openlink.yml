@@ -1,22 +1,19 @@
-name: Weep OpenLink Exploit Test
-
-on:
-  push:
-    branches: [ main ]
-
 jobs:
   exploit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Go
+      - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.20' 
+          go-version: 1.20
 
-      - name: Make fake open binary executable
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Make fake open executable
         run: chmod +x fakebin/open
 
       - name: Prepend fakebin to PATH and run PoC
