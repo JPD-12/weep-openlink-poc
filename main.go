@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/Netflix/weep/pkg/util"
+	"github.com/netflix/weep/pkg/util"
 )
 
 func init() {
